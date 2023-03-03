@@ -15,50 +15,47 @@ int main()
 {
     //Hacemos el tablero para el tres en raya
     int tablero[3][3] ={{8, 8, 8}, {8, 8, 8}, {8, 8, 8}};
+    bool gameOver = false;
+    int resultado = 0;
 
     //Hacemos el bucle mundo, mientras siga activo el juego no termina
     for (int i = 0; i < 9; i++)
      {
         mostrarTablero(tablero);
-        player1Turn(tablero);
 
-        int resultado = checkGameFinish(tablero);
-        if (resultado == 0)
+        if (gameOver == false)
         {
-            continue;
+            player1Turn(tablero);
+            resultado = checkGameFinish(tablero);
+            if (resultado == 1)
+            {
+                gameOver = true;
+            }
         }
-        else if (resultado == 1)
+
+        else
         {
-            cout << "Gana el jugador 1";
+            cout << "Ha ganado el jugador 2";
             break;
         }
 
-        else if (resultado == 2)
-        {
-            cout << "Gana el jugador 2";
-            break;
-        }
-    
         mostrarTablero(tablero);
-        player2Turn(tablero);
 
-        resultado = checkGameFinish(tablero);
-        if (resultado == 0)
+        if (gameOver == false)
         {
-            continue;
-        }
-        else if (resultado == 1)
-        {
-            cout << "Gana el jugador 1";
-            break;
+            player2Turn(tablero);
+            resultado = checkGameFinish(tablero);
+            if (resultado == 2)
+            {
+                gameOver = true;
+            }
         }
 
-        else if (resultado == 2)
+        else
         {
-            cout << "Gana el jugador 2";
+            cout << "Ha ganado el jugador 1";
             break;
         }
-        
     }
     return 0;
 }
@@ -129,6 +126,9 @@ void player2Turn(int tablero[][3])
 //Funcion check ganador
 int checkGameFinish(int tablero[][3])
 {
+    //Variable para el ganador, 0 = Sigue la partida, 1 = Gana Jugador 1, 2 = Gana Jugador 2
+    int ganador = 0;
+
     //Todas las posibilidades para que haya tres en raya
     int tableroRow1 = tablero[0][0] + tablero[0][1] + tablero[0][2];
     int tableroRow2 = tablero[1][0] + tablero[1][1] + tablero[1][2];
@@ -142,20 +142,13 @@ int checkGameFinish(int tablero[][3])
     //Se comprueba si el primer jugador (valor 1) pone tres unos en raya comprobando si la suma de las tres casillas da tres
     if (tableroRow1 == 3 || tableroRow2 == 3 || tableroRow3 == 3 || tableroCol1 == 3 || tableroCol2 == 3 || tableroCol3 == 3 || tableroDia1 == 3 || tableroDia2 == 3)
     {
-        //Valor 1 significa que el jugador 1 gana
-        return 1;
+        ganador = 1;
     }
     //Lo mismo que arriba pero para el jugador 2 (Con valor 2) en el que la suma en vez de dar 3, da 6
     else if (tableroRow1 == 6 || tableroRow2 == 6 || tableroRow3 == 6 || tableroCol1 == 6 || tableroCol2 == 6 || tableroCol3 == 6 || tableroDia1 == 6 || tableroDia2 == 6)
     {
-        //Jugador 2 gana
-        return 2;
+        ganador = 2;
     }
     
-
-    else
-    {
-        //Continua el juego
-        return 0;
-    }
+    return ganador;
 }
